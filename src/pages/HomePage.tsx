@@ -479,17 +479,17 @@ const HomePage = () => {
   };
 
   return (
-    <div className="!min-h-screen w-fullbg-white text-black dark:bg-gray-900 dark:text-white flex flex-col p-6">
-      <header className={`!shadow-md flex justify-between items-center px-6 py-4 ${darkMode ? '!bg-gray-900' : '!bg-white'}`}>
-        <span className="!text-2xl font-bold">📌 Application Tracker</span>
-        <div className="!flex items-center space-x-4 ${darkMode ? '!bg-gray-900' : '!bg-white'}">
+    <div className="min-h-screen w-full bg-white text-black dark:bg-gray-900 dark:text-white flex flex-col p-6">
+      <header className="shadow-md flex justify-between items-center px-6 py-4 bg-white dark:bg-gray-900">
+        <span className="text-2xl font-bold">📌 Application Tracker</span>
+        <div className="flex items-center space-x-4 bg-white dark:bg-gray-900">
           {user?.photoURL && <Avatar><AvatarImage src={user.photoURL} /></Avatar>}
-          <span className="!text-gray-700">{user?.displayName || user?.email}</span>
+          <span className="!text-gray-400">{user?.displayName || user?.email}</span>
           <Button onClick={handleLogout} className="!bg-black text-white">Log Out</Button>
         </div>
       </header>
       
-      <main className="!flex-grow w-full max-w-7xl mx-auto py-8">
+      <main className="flex-grow w-full max-w-7xl mx-auto py-8">
         <div className="!flex justify-between items-center mb-4">
         <div className="relative w-100">
             <Input
@@ -510,7 +510,7 @@ const HomePage = () => {
             + Add Application
           </Button>
         </div>
-        <div className="flex items-center gap-0 ml-auto">
+        <div className="ml-auto flex justify-end gap-1 items-center mb-2">
           {/* Card/List toggle */}
           <Button
             variant="icon" size="icon"
