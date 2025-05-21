@@ -22,6 +22,8 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         google:
           "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 flex items-center justify-center px-4 py-2 rounded-md shadow-sm",
+          icon: "bg-transparent text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 p-2 rounded-md transition-colors",
+
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

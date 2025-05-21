@@ -389,7 +389,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Search } from "lucide-react";
+import { Search, Sun, Moon } from "lucide-react";
 import { FaTh, FaList } from "react-icons/fa";
 import JobApplicationForm from "../pages/JobApplicationForm";
 
@@ -461,8 +461,25 @@ const HomePage = () => {
     app.company.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  useEffect(() => {
+    const saved = localStorage.getItem("darkMode");
+    const isDark = saved === "true";
+    setDarkMode(isDark);
+    document.documentElement.classList.toggle("dark", isDark);
+  }, []);
+
+  // Toggle handler
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => {
+      const newMode = !prev;
+      document.documentElement.classList.toggle("dark", newMode);
+      localStorage.setItem("darkMode", String(newMode));
+      return newMode;
+    });
+  };
+
   return (
-    <div className="!min-h-screen w-full dark:bg-gray-800 flex flex-col p-6">
+    <div className="!min-h-screen w-fullbg-white text-black dark:bg-gray-900 dark:text-white flex flex-col p-6">
       <header className={`!shadow-md flex justify-between items-center px-6 py-4 ${darkMode ? '!bg-gray-900' : '!bg-white'}`}>
         <span className="!text-2xl font-bold">📌 Application Tracker</span>
         <div className="!flex items-center space-x-4 ${darkMode ? '!bg-gray-900' : '!bg-white'}">
@@ -493,39 +510,53 @@ const HomePage = () => {
             + Add Application
           </Button>
         </div>
-        <Button onClick={() => setIsCardView(!isCardView)} className="!bg-transparent text-black hover:text-black flex items-right rounded-2xl">
+        <div className="flex items-center gap-0 ml-auto">
+          {/* Card/List toggle */}
+          <Button
+            variant="icon" size="icon"
+            onClick={() => setIsCardView(!isCardView)}
+            className="!bg-transparent text-black dark:text-white flex items-center hover:bg-gray-200 dark:hover:bg-gray-700 p-2 rounded-2xl transition-colors"
+          >
             {isCardView ? <FaList size={20} /> : <FaTh size={20} />}
           </Button>
-          <Button onClick={() => setDarkMode(!darkMode)} className="!bg-transparent text-black hover:text-black flex items-right rounded-2xl">{darkMode ? "Light Mode" : "Dark Mode"}
+
+          {/* Dark mode toggle */}
+          <Button
+            variant="icon" size="icon"
+            onClick={toggleDarkMode}
+            className="!bg-transparent text-black dark:text-white flex items-center rounded-2xl"
+          >
+            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
           </Button>
+        </div>
         
         {!isCardView && (
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <table className="min-w-full bg-white border border-gray-300">
-              <thead className="bg-gray-100"> 
+          <div className="bg-white dark:bg-gray-900 shadow-md rounded-lg overflow-hidden transition-colors">
+            <table className="min-w-full bg-white border border-gray-300 dark:bg-gray-800 dark:border-grap-600">
+              <thead className="bg-gray-100 dark:bg-gray-800 transition-colors"> 
                 <tr>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Job Title</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Company</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Applied Date</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  {["Job Title", "Company", "Status", "Applied Date", "Actions"].map((header) => (
+                  <th key={header} className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase transition-colors">
+                    {header}
+                  </th>
+                  ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-600 transition-colors">
                 {filteredApplications.map((app) => (
-                  <tr key={app.id} className="border-b">
-                    <td className="px-6 py-4 whitespace-nowrap">{app.title}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{app.company}</td>
+                  <tr key={app.id} className="bg-gray-50 dark:bg-gray-800 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap text-black dark:text-white">{app.title}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-black dark:text-white">{app.company}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          statusColors[app.status.trim()] || "bg-gray-100 text-gray-800"
+                          statusColors[app.status.trim()] || "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 transition-colors"
                         }`}
                       >
                         {app.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{app.appliedDate}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-black dark:text-white">{app.appliedDate}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Button onClick={() => { setSelectedApplication(app); setIsFormOpen(true); }} className="!bg-blue-500 text-white mr-2">Edit</Button>
                       <Button onClick={() => deleteApplication(app.id)} className="!bg-red-500 text-white">Delete</Button>
@@ -539,24 +570,24 @@ const HomePage = () => {
 
         {/* Card View */}
         {isCardView && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-black dark:text-white">
             {filteredApplications.map((app) => (
-              <Card key={app.id} className="p-4 shadow-lg">
+              <Card key={app.id} className="p-4 shadow-lg bg-white dark:bg-gray-900 transition-colors">
                 <CardContent>
-                  <h2 className="!text-lg font-semibold">{app.title}</h2>
-                  <p className="!text-gray-600">{app.company}</p>
-                  <p className="mt-2 text-sm !text-gray-500">Applied: {app.appliedDate}</p>
+                  <h2 className="text-lg font-semibold text-black dark:text-white">{app.title}</h2>
+                  <p className="text-gray-600 dark:text-gray-300">{app.company}</p>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Applied: {app.appliedDate}</p>
                   <div className="mt-2">
                     <span
                       className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        statusColors[app.status.trim()] || "bg-gray-100 text-gray-800"
+                        statusColors[app.status.trim()] || "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
                       }`}
                     >
                       {app.status}
                     </span>
                   </div>
 
-                  <div className="flex justify-center mt-4">
+                  <div className="flex justify-center mt-4 text-black dark:text-white">
                     <Button onClick={() => { setSelectedApplication(app); setIsFormOpen(true); }} className="!bg-blue-500 text-white mr-2">Edit</Button>
                     <Button onClick={() => deleteApplication(app.id)} className="!bg-red-500 text-white">Delete</Button>
                   </div>
