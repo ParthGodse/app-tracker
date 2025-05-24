@@ -531,7 +531,7 @@ const HomePage = () => {
         </div>
         
         {!isCardView && (
-          <div className="bg-white dark:bg-gray-900 shadow-md rounded-lg overflow-hidden transition-colors">
+          <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden transition-colors">
             <table className="min-w-full bg-white border border-gray-300 dark:bg-gray-800 dark:border-grap-600">
               <thead className="bg-gray-100 dark:bg-gray-800 transition-colors"> 
                 <tr>
